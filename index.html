@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telelux - Interne Ermittlungsdatenbank</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f6f9;
@@ -12,19 +16,24 @@
             padding: 0;
             color: #333;
         }
+        
         header {
             background-color: #0d2c54;
             color: white;
-            padding: 15px 30px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            gap: 15px;
         }
+        
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
+            flex-shrink: 0;
         }
         
         /* --- START PURES CSS TELELUX LOGO --- */
@@ -37,6 +46,7 @@
             align-items: center;
             flex-shrink: 0;
         }
+        
         .bg-circle {
             position: absolute;
             width: 100%;
@@ -46,35 +56,35 @@
             overflow: hidden;
             box-shadow: inset -4px -4px 10px rgba(0,0,0,0.5);
         }
-        /* Kleine Sterne im blauen Kreis */
+        
         .small-star {
             position: absolute;
             background: white;
             border-radius: 50%;
             box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.8);
         }
+        
         .ss1 { width: 2px; height: 2px; top: 20%; left: 30%; }
         .ss2 { width: 1.5px; height: 1.5px; top: 65%; left: 75%; }
         .ss3 { width: 2.5px; height: 2.5px; top: 80%; left: 25%; }
         .ss4 { width: 1px; height: 1px; top: 35%; left: 85%; }
         .ss5 { width: 1.5px; height: 1.5px; top: 15%; left: 60%; }
 
-        /* Großer goldener Stern */
         .main-star {
             position: absolute;
             width: 55px;
             height: 75px;
             background: linear-gradient(135deg, #ffeba6 0%, #d4af37 50%, #9e7a00 100%);
             clip-path: polygon(50% 0%, 54% 43%, 100% 50%, 54% 57%, 50% 100%, 46% 57%, 0% 50%, 46% 43%);
-            z-index: 2; /* Stern liegt ZWISCHEN den beiden Ringen */
+            z-index: 2;
         }
 
-        /* Umlaufende Ringe */
         .orbit-ring {
             position: absolute;
             border-radius: 50%;
             border: solid transparent;
         }
+        
         .ring-back {
             width: 140%;
             height: 60%;
@@ -85,8 +95,9 @@
             transform: rotate(-15deg);
             top: 15%;
             left: -20%;
-            z-index: 1; /* Hinter dem Stern */
+            z-index: 1;
         }
+        
         .ring-front {
             width: 150%;
             height: 45%;
@@ -97,53 +108,71 @@
             transform: rotate(-22deg);
             top: 45%;
             left: -25%;
-            z-index: 3; /* Vor dem Stern */
+            z-index: 3;
             filter: drop-shadow(0px -1px 2px rgba(0,0,0,0.3));
         }
         /* --- ENDE PURES CSS LOGO --- */
 
         .brand-text h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 22px;
             letter-spacing: 1px;
         }
+        
         .brand-text p {
             margin: 0;
-            font-size: 12px;
+            font-size: 11px;
             color: #a0c4ff;
         }
+        
         .user-info {
-            font-size: 14px;
+            font-size: 13px;
             background-color: rgba(255, 255, 255, 0.1);
-            padding: 8px 15px;
+            padding: 8px 12px;
             border-radius: 5px;
             border: 1px solid #4a6fa5;
+            white-space: nowrap;
         }
+        
         main {
             max-width: 800px;
-            margin: 50px auto;
+            margin: 30px auto;
             background: white;
-            padding: 40px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             text-align: center;
         }
+        
+        main h2 {
+            margin-top: 0;
+        }
+        
         .search-container {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
         }
+        
         input[type="text"] {
-            width: 60%;
+            width: 90%;
+            max-width: 400px;
             padding: 12px 15px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 4px;
             outline: none;
         }
+        
         input[type="text"]:focus {
             border-color: #0d2c54;
+            box-shadow: 0 0 5px rgba(13, 44, 84, 0.3);
         }
+        
         button {
-            padding: 12px 25px;
+            padding: 12px 30px;
             font-size: 16px;
             background-color: #0d2c54;
             color: white;
@@ -151,32 +180,110 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background 0.3s;
+            min-width: 100px;
         }
+        
         button:hover {
             background-color: #1a4982;
         }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
         #error-message {
             color: #d9534f;
             margin-top: 20px;
             font-weight: bold;
             display: none;
         }
+        
         #result-container {
             display: none;
             margin-top: 30px;
         }
+        
         #result-container img {
             max-width: 100%;
+            height: auto;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
         }
+        
         .back-button {
             margin-top: 20px;
             background-color: #6c757d;
         }
+        
         .back-button:hover {
             background-color: #5a6268;
+        }
+
+        /* Mobile Optimierungen */
+        @media (max-width: 600px) {
+            header {
+                padding: 12px 15px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .logo-container {
+                gap: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .telelux-css-logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .brand-text h1 {
+                font-size: 20px;
+            }
+
+            .brand-text p {
+                font-size: 10px;
+            }
+
+            .user-info {
+                width: 100%;
+                font-size: 12px;
+                white-space: normal;
+                order: 3;
+            }
+
+            main {
+                margin: 20px 10px;
+                padding: 20px 15px;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                font-size: 16px; /* Verhindert Zoom beim Focus auf iOS */
+            }
+
+            button {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .telelux-css-logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .brand-text h1 {
+                font-size: 18px;
+            }
+
+            main {
+                padding: 15px 10px;
+            }
         }
     </style>
 </head>
@@ -222,7 +329,7 @@
     <main id="result-view" style="display: none;">
         <h2>Erfassungsdaten: 0281 7654 9032</h2>
         <div id="result-container">
-            <img src="escape game  (1).png" alt="Netzwerkprotokoll Telelux">
+            <img src="escape game  (1).png" alt="Netzwerkprotokoll Telelux" loading="lazy">
         </div>
         <button class="back-button" onclick="resetSearch()">Neue Suche</button>
     </main>
@@ -230,7 +337,7 @@
     <script>
         function performSearch() {
             const inputField = document.getElementById('searchInput');
-            const rawValue = inputField.value;
+            const rawValue = inputField.value.trim();
             
             const normalizedValue = rawValue.replace(/\s+/g, '');
             const targetNumber = "028176549032";
