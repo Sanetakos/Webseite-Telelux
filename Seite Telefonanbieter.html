@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telelux - Interne Ermittlungsdatenbank</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #0d2c54;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        /* --- START PURES CSS TELELUX LOGO --- */
+        .telelux-css-logo {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .bg-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 35% 35%, #1a4982 0%, #081d38 90%);
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: inset -4px -4px 10px rgba(0,0,0,0.5);
+        }
+        /* Kleine Sterne im blauen Kreis */
+        .small-star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.8);
+        }
+        .ss1 { width: 2px; height: 2px; top: 20%; left: 30%; }
+        .ss2 { width: 1.5px; height: 1.5px; top: 65%; left: 75%; }
+        .ss3 { width: 2.5px; height: 2.5px; top: 80%; left: 25%; }
+        .ss4 { width: 1px; height: 1px; top: 35%; left: 85%; }
+        .ss5 { width: 1.5px; height: 1.5px; top: 15%; left: 60%; }
+
+        /* Großer goldener Stern */
+        .main-star {
+            position: absolute;
+            width: 55px;
+            height: 75px;
+            background: linear-gradient(135deg, #ffeba6 0%, #d4af37 50%, #9e7a00 100%);
+            clip-path: polygon(50% 0%, 54% 43%, 100% 50%, 54% 57%, 50% 100%, 46% 57%, 0% 50%, 46% 43%);
+            z-index: 2; /* Stern liegt ZWISCHEN den beiden Ringen */
+        }
+
+        /* Umlaufende Ringe */
+        .orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: solid transparent;
+        }
+        .ring-back {
+            width: 140%;
+            height: 60%;
+            border-width: 0 0 3px 0;
+            border-bottom-color: #c49a2d;
+            border-left-width: 2px;
+            border-left-color: rgba(196, 154, 45, 0.4);
+            transform: rotate(-15deg);
+            top: 15%;
+            left: -20%;
+            z-index: 1; /* Hinter dem Stern */
+        }
+        .ring-front {
+            width: 150%;
+            height: 45%;
+            border-width: 0 0 4px 0;
+            border-bottom-color: #f9d976;
+            border-left-width: 3px;
+            border-left-color: rgba(249, 217, 118, 0.6);
+            transform: rotate(-22deg);
+            top: 45%;
+            left: -25%;
+            z-index: 3; /* Vor dem Stern */
+            filter: drop-shadow(0px -1px 2px rgba(0,0,0,0.3));
+        }
+        /* --- ENDE PURES CSS LOGO --- */
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+        .brand-text p {
+            margin: 0;
+            font-size: 12px;
+            color: #a0c4ff;
+        }
+        .user-info {
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #4a6fa5;
+        }
+        main {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .search-container {
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            width: 60%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: #0d2c54;
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #0d2c54;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #1a4982;
+        }
+        #error-message {
+            color: #d9534f;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+        #result-container {
+            display: none;
+            margin-top: 30px;
+        }
+        #result-container img {
+            max-width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            margin-top: 20px;
+            background-color: #6c757d;
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="telelux-css-logo">
+                <div class="bg-circle">
+                    <div class="small-star ss1"></div>
+                    <div class="small-star ss2"></div>
+                    <div class="small-star ss3"></div>
+                    <div class="small-star ss4"></div>
+                    <div class="small-star ss5"></div>
+                </div>
+                <div class="orbit-ring ring-back"></div>
+                <div class="main-star"></div>
+                <div class="orbit-ring ring-front"></div>
+            </div>
+            
+            <div class="brand-text">
+                <h1>Telelux</h1>
+                <p>Ihr Anbieter für Telefonie am Niederrhein</p>
+            </div>
+        </div>
+        <div class="user-info">
+            Eingeloggt als: <strong>Admin/Kommissar Henkel</strong>
+        </div>
+    </header>
+
+    <main id="search-view">
+        <h2>Datenbankabfrage</h2>
+        <p>Bitte geben Sie die zu überprüfende Zielrufnummer ein:</p>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="z.B. 0281 1234 5678" onkeypress="handleKeyPress(event)">
+            <button onclick="performSearch()">Suchen</button>
+        </div>
+        
+        <div id="error-message">Kein Ergebnis gefunden.</div>
+    </main>
+
+    <main id="result-view" style="display: none;">
+        <h2>Erfassungsdaten: 0281 7654 9032</h2>
+        <div id="result-container">
+            <img src="escape game  (1).png" alt="Netzwerkprotokoll Telelux">
+        </div>
+        <button class="back-button" onclick="resetSearch()">Neue Suche</button>
+    </main>
+
+    <script>
+        function performSearch() {
+            const inputField = document.getElementById('searchInput');
+            const rawValue = inputField.value;
+            
+            const normalizedValue = rawValue.replace(/\s+/g, '');
+            const targetNumber = "028176549032";
+
+            const errorMessage = document.getElementById('error-message');
+            const searchView = document.getElementById('search-view');
+            const resultView = document.getElementById('result-view');
+            const resultContainer = document.getElementById('result-container');
+
+            if (normalizedValue === targetNumber) {
+                errorMessage.style.display = 'none';
+                searchView.style.display = 'none';
+                resultView.style.display = 'block';
+                resultContainer.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        function resetSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('result-view').style.display = 'none';
+            document.getElementById('search-view').style.display = 'block';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+    </script>
+
+</body>
+</html>
